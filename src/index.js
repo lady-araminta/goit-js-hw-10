@@ -1,54 +1,49 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
-import { format, compareAsc } from 'date-fns';
 import 'material-icons/iconfont/material-icons.css';
+import { fetchCountries } from './fetchCountries';
+import { createFullMarkup } from './createMarkup';
 const debounce = require('lodash.debounce');
-const DEBOUNCE_DELAY = 5000;
+const DEBOUNCE_DELAY = 300;
 
-const containerRef = document.querySelector('.country-info');
+const countryCardRef = document.querySelector('.country-info');
+const countryListRef = document.querySelector('.country-list');
 const formRef = document.querySelector('#search-box');
 
 formRef.addEventListener('input', debounce(onInputForm, DEBOUNCE_DELAY));
 
 function onInputForm(event) {
   event.preventDefault();
+  clearMarkup();
   const name = event.target.value.trim().toLowerCase();
-  console.log(name);
   fetchCountries(name)
     .then(data => {
-      const markup = createMarkup(data);
-      containerRef.innerHTML = markup;
+      console.log(data.length);
+      if (data.length === 1) {
+        const markup = createFullMarkup(data);
+        countryCardRef.innerHTML = markup;
+      } else if (data.length >= 2 && data.length <= 10) {
+        data.forEach(country => {
+          countryListRef.insertAdjacentHTML(
+            'beforeend',
+            `<li class="country-list__item">
+        <img src="${country.flags.svg}" alt="${country.name.official}" width="30">
+        <p class="country-list__label">${country.name.official}</p>
+      </li>`
+          );
+        });
+      } else {
+        Notiflix.Notify.warning(
+          'Too many matches found. Please enter a more specific name.'
+        );
+      }
     })
     .catch(error => {
       Notiflix.Notify.failure('Oops, there is no country with that name');
     });
 }
-function fetchCountries(name) {
-  const url = 'https://restcountries.com/v3.1/name/';
-  const options = '?fields=name,capital,population,flags,languages';
-  return fetch(`${url}${name}${options}`).then(response => {
-    if (!response.ok) {
-      throw new Error(response.status);
-    }
-    return response.json();
-  });
-}
 
-function createMarkup(data) {
-  const { capital, population, languages, flags, name } = data[0];
-  const languageString = Object.values(languages).join('');
-  const capitalString = capital.join('');
-  return `<img src="${flags.svg}" alt="${name.official}" width="30">
-      <h2 class="country__name">${name.official}</h2>
-      <ul class="country-info__list">
-        <li class="country-info__item">
-          <p class="country-info__description"><span class="country-info__label">Capital: </span>${capitalString}</p>
-        </li>
-        <li class="country-info__item">
-          <p class="country-info__description"><span class="country-info__label">Population: </span>${population}</p>
-        </li>
-        <li class="country-info__item">
-          <p class="country-info__description"><span class="country-info__label">Languages: </span>${languageString}</p>
-        </li>
-      </ul>`;
+function clearMarkup() {
+  countryCardRef.textContent = '';
+  countryListRef.textContent = '';
 }
