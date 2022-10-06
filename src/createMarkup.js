@@ -2,7 +2,7 @@ export function createFullMarkup(data) {
   const { capital, population, languages, flags, name } = data[0];
   const languageString = Object.values(languages);
   const capitalString = capital.join('');
-  return `<img src="${flags.svg}" alt="${name.official}" width="30">
+  return `<img src="${flags.svg}" alt="${name.official}" width="60">
       <h2 class="country__name">${name.official}</h2>
       <ul class="country-info__list">
         <li class="country-info__item">

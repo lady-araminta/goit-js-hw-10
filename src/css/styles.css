@@ -11,6 +11,9 @@ body {
   color: #212121;
   line-height: 1.5;
 }
+ul {
+  list-style: none;
+}
 
 #search-box {
   font: inherit;
@@ -24,5 +27,8 @@ body {
 }
 .country-list__label {
   margin-left: 10px;
+  font-weight: 700;
+}
+.country-info__label {
   font-weight: 700;
 }
