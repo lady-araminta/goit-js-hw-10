@@ -18,7 +18,6 @@ function onInputForm(event) {
   const name = event.target.value.trim().toLowerCase();
   fetchCountries(name)
     .then(data => {
-      console.log(data.length);
       if (data.length === 1) {
         const markup = createFullMarkup(data);
         countryCardRef.innerHTML = markup;
