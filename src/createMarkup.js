@@ -22,11 +22,9 @@ export function createFullMarkup(data) {
 export function createPrewiewMarkup(countries) {
   return countries
     .map(country => {
-      console.log(country.name.common);
-      console.log(country.flags.svg);
-      return `<li class="list-item">
-      <img src="${country.flags.svg}" class="flag-svg" width="60" height="30" alt="${country.name.common}">
-        <p class="item-text">${country.name.common}</p>
+      return `<li class="country-list__item">
+      <img src="${country.flags.svg}" width="30" alt="${country.name.official}">
+        <p class="country-list__label">${country.name.official}</p>
       </img>
     </li>`;
     })

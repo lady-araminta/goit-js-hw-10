@@ -29,6 +29,13 @@ ul {
   margin-left: 10px;
   font-weight: 700;
 }
+.info-container {
+  padding: 24px;
+  width: 360px;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 1px rgba(0, 0, 0, 0.14),
+    0px 2px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
 .country-info__label {
   font-weight: 700;
 }
