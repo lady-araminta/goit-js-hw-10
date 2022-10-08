@@ -1,9 +1,13 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
-import 'material-icons/iconfont/material-icons.css';
+import debounce from 'lodash.debounce';
 import { fetchCountries } from './fetchCountries';
-import { createFullMarkup } from './createMarkup';
-const debounce = require('lodash.debounce');
+import {
+  createFullMarkup,
+  createPrewiewMarkup,
+  clearMarkup,
+} from './createMarkup';
+
 const DEBOUNCE_DELAY = 300;
 
 const countryCardRef = document.querySelector('.country-info');
@@ -14,8 +18,11 @@ formRef.addEventListener('input', debounce(onInputForm, DEBOUNCE_DELAY));
 
 function onInputForm(event) {
   event.preventDefault();
-  clearMarkup();
   const name = event.target.value.trim().toLowerCase();
+  if (!name) {
+    clearMarkup();
+    return;
+  }
   fetchCountries(name)
     .then(data => {
       if (data.length === 1) {
@@ -23,13 +30,8 @@ function onInputForm(event) {
         countryCardRef.innerHTML = markup;
       } else if (data.length >= 2 && data.length <= 10) {
         data.forEach(country => {
-          countryListRef.insertAdjacentHTML(
-            'beforeend',
-            `<li class="country-list__item">
-        <img src="${country.flags.svg}" alt="${country.name.official}" width="30">
-        <p class="country-list__label">${country.name.official}</p>
-      </li>`
-          );
+          const markupList = createPrewiewMarkup(data);
+          countryListRef.insertAdjacentHTML('beforeend', markupList);
         });
       } else {
         Notiflix.Notify.warning(
@@ -38,11 +40,6 @@ function onInputForm(event) {
       }
     })
     .catch(error => {
-      Notiflix.Notify.failure('Oops, there is no country with that name');
+      console.log(error);
     });
-}
-
-function clearMarkup() {
-  countryCardRef.textContent = '';
-  countryListRef.textContent = '';
 }

@@ -16,3 +16,21 @@ export function createFullMarkup(data) {
         </li>
       </ul>`;
 }
+
+export function createPrewiewMarkup(data) {
+  return data
+    .map(country => {
+      const { name, flags } = country;
+      return `<li class="list-item">
+        <img src="${flags.svg}" class="flag-svg" width="60" height="30" alt="${name}">
+          <p class="item-text">${name}</p>
+        </img>
+      </li>`;
+    })
+    .join('');
+}
+
+export function clearMarkup() {
+  countryCardRef.textContent = '';
+  countryListRef.textContent = '';
+}
